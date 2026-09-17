@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Juan Giuri | Portfolio{% endblock %}
+{% block content %}
+<main class="portfolio-layout">
+    <section class="profile-panel" aria-labelledby="profile-title">
+        <h1 id="profile-title">Juan Giuri</h1>
+        <div class="portrait-frame"><img src="{% static 'assets/pancho123.png' %}" alt="Retrato de Juan Giuri"></div>
+    </section>
+    <section class="content-panels" aria-label="Secciones del portfolio">
+        <button id="Myself" class="content-panel content-panel--expandable" type="button" aria-expanded="false" aria-controls="myself-content">
+            <span class="panel-label">Myself</span><span class="panel-arrow" aria-hidden="true">+</span>
+            <span class="panel-content" id="myself-content">
+                <span class="panel-paragraph">Soy un estudiante de 17 años con interés en seguir creciendo, aprender y enfrentar nuevos desafíos. Me motiva participar en proyectos que me permitan poner en práctica mis conocimientos.</span>
+                <span class="panel-paragraph">Busco oportunidades para aportar mis ideas, trabajar en equipo y continuar construyendo mi perfil profesional desde una etapa temprana.</span>
+            </span>
+        </button>
+        <article id="Projects" class="content-panel content-panel--projects" role="button" tabindex="0" aria-expanded="false">
+            <span class="panel-label">Projects</span><span class="panel-arrow" aria-hidden="true">+</span>
+            <span class="project-content">
+                <a class="card border-0 project-card project-card-link" href="https://github.com/Dantelz/save-obama-wishlist-on-steam" target="_blank" rel="noopener noreferrer"><img src="{% static 'assets/save-him.png' %}" class="card-img-top" alt="Save Obama Game"><span class="card-body"><span class="card-title">Save Obama Game</span></span></a>
+                <a class="card border-0 project-card project-card-link slither-card" href="https://github.com/sabiondo298/Trabajo-1er-Bimestre-4AO" target="_blank" rel="noopener noreferrer"><img src="{% static 'assets/slither-bro.png' %}" class="card-img-top" alt="Slither Juan"><span class="card-body"><span class="card-title">Slither Juan</span></span></a>
+            </span>
+        </article>
+        <article id="Contact" class="content-panel content-panel--contact" role="button" tabindex="0" aria-expanded="false">
+            <span class="panel-label">Contact</span><span class="panel-arrow" aria-hidden="true">+</span>
+            <span class="contact-content"><span class="social-links"><a class="social-link" href="https://www.instagram.com/juan_giuri" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i><span>Instagram</span></a><a class="social-link" href="https://github.com/sabiondo298" target="_blank" rel="noopener noreferrer"><i class="bi bi-github"></i><span>GitHub</span></a><a class="social-link" href="mailto:juangiuri@gmail.com"><i class="bi bi-envelope-fill"></i><span>Mail</span></a></span><span class="contact-mail">juangiuri@gmail.com</span></span>
+        </article>
+    </section>
+</main>
+{% endblock %}
+{% block extra_js %}
+<script>
+    const togglePanel = (panel) => { const expanded = panel.classList.toggle("is-expanded"); panel.parentElement.classList.toggle("has-expanded", expanded); panel.setAttribute("aria-expanded", String(expanded)); };
+    const myselfPanel = document.querySelector(".content-panel--expandable");
+    myselfPanel.addEventListener("click", () => togglePanel(myselfPanel));
+    [document.querySelector(".content-panel--projects"), document.querySelector(".content-panel--contact")].forEach((panel) => {
+        panel.addEventListener("click", (event) => { if (!event.target.closest("a")) togglePanel(panel); });
+        panel.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); togglePanel(panel); } });
+    });
+</script>
+{% endblock %}

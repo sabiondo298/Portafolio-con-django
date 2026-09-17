@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} | Blog{% endblock %}
+{% block content %}
+<main class="blog-page post-detail-page">
+    <a class="back-link" href="{% url 'blog:post_list' %}"><span aria-hidden="true">←</span> Volver al blog</a>
+    <article class="post-article">
+        <p class="post-date">{{ post.published_at|date:"d.m.Y" }}</p><h1>{{ post.title }}</h1><p class="post-lead">{{ post.excerpt }}</p>
+        {% if post.multimedia %}{% if post.multimedia.name|lower|slice:"-4:" in ".jpg,.png,.gif,.webp" %}<img src="{{ post.multimedia.url }}" alt="Imagen de {{ post.title }}" class="article-media">{% else %}<a class="media-file" href="{{ post.multimedia.url }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-paperclip"></i> Abrir archivo multimedia</a>{% endif %}{% endif %}
+        <div class="post-body">{{ post.body|linebreaks }}</div>
+    </article>
+    <section id="comments" class="comments-section" aria-labelledby="comments-title">
+        <div class="section-rule"><h2 id="comments-title">Comentarios <span>({{ post.comments.count }})</span></h2></div>
+        {% for comment in post.comments.all %}<article class="comment"><div><strong>{{ comment.author }}</strong><time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|date:"d/m/Y H:i" }}</time></div><p>{{ comment.body|linebreaksbr }}</p></article>{% empty %}<p class="muted-text">Todavía no hay comentarios. Sé el primero en dejar una idea.</p>{% endfor %}
+        <form class="comment-form" method="post">{% csrf_token %}<h3>Dejá tu comentario</h3>{{ form.non_field_errors }}<label for="{{ form.author.id_for_label }}">{{ form.author.label }}</label>{{ form.author }}{{ form.author.errors }}<label for="{{ form.body.id_for_label }}">{{ form.body.label }}</label>{{ form.body }}{{ form.body.errors }}<button type="submit" class="submit-button">Publicar comentario <span aria-hidden="true">→</span></button></form>
+    </section>
+</main>
+{% endblock %}

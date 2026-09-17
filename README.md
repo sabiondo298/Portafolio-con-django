@@ -1,5 +1,18 @@
-# Mi Portfolio
+# Portfolio y blog de Juan Giuri
 
-Desarrollé este portfolio personal estático con HTML, CSS y JavaScript. En la página presento mi perfil, mis proyectos y mis medios de contacto, utilizando una composición de 3 tercios.
+Sitio personal desarrollado con Django. La portada conserva la composición original del portfolio y el blog permite publicar entradas con texto, adjuntar archivos multimedia y recibir comentarios.
 
-Investigue en lugares como w3schools y videos de Youtube.
+## Puesta en marcha
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+Abrir `http://127.0.0.1:8000/` para el portfolio, `http://127.0.0.1:8000/blog/` para el blog y `/admin/` para administrar entradas y eliminar comentarios.
+
+Las entradas solo se crean desde el admin. Los visitantes pueden comentar sin registrarse; el administrador puede moderar y eliminar esos comentarios.

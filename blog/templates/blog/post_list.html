@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Blog | Juan Giuri{% endblock %}
+{% block content %}
+<main class="blog-page">
+    <div class="blog-heading"><p class="eyebrow">JUAN GIURI / BITÁCORA</p><h1>Ideas en proceso</h1><p class="blog-intro">Notas sobre lo que estoy aprendiendo, creando y descubriendo.</p></div>
+    {% if posts %}
+    <section class="post-grid" aria-label="Entradas del blog">
+        {% for post in posts %}
+        <article class="post-card">
+            {% if post.multimedia %}{% if post.multimedia.name|lower|slice:"-4:" in ".jpg,.png,.gif,.webp" %}<img src="{{ post.multimedia.url }}" alt="Imagen de {{ post.title }}" class="post-media">{% endif %}{% endif %}
+            <div class="post-card-body"><p class="post-date">{{ post.published_at|date:"d.m.Y" }}</p><h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2><p>{{ post.excerpt }}</p><a class="read-link" href="{{ post.get_absolute_url }}">Leer entrada <span aria-hidden="true">→</span></a></div>
+        </article>
+        {% endfor %}
+    </section>
+    {% else %}
+    <div class="empty-state"><i class="bi bi-journal-code" aria-hidden="true"></i><h2>La primera entrada está por llegar.</h2><p>El administrador puede publicar una nueva historia desde el panel de Django.</p></div>
+    {% endif %}
+</main>
+{% endblock %}
