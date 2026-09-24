@@ -20,9 +20,24 @@
             <a href="/#Projects">Projects</a>
             <a href="/#Contact">Contact</a>
         </nav>
+        {% if request.resolver_match.namespace == "blog" %}<button class="admin-button" type="button" aria-haspopup="dialog" aria-controls="admin-modal">Admin</button>{% endif %}
         <a class="blog-button" href="{% url 'blog:post_list' %}">Blog</a>
         <button class="theme-toggle" type="button" aria-label="Activar modo claro" aria-pressed="false" title="Cambiar tema"><i class="bi bi-sun-fill" aria-hidden="true"></i></button>
     </header>
+    {% if request.resolver_match.namespace == "blog" %}<dialog class="admin-modal" id="admin-modal" aria-labelledby="admin-modal-title">
+        <form class="admin-form" method="post" action="{% url 'admin:login' %}">
+            {% csrf_token %}
+            <button class="admin-modal-close" type="button" aria-label="Cerrar ventana">&times;</button>
+            <p class="eyebrow">ACCESO PRIVADO</p>
+            <h2 id="admin-modal-title">Ingresar al admin</h2>
+            <input type="hidden" name="next" value="{% url 'admin:index' %}">
+            <label for="admin-username">Nombre de usuario</label>
+            <input id="admin-username" name="username" type="text" autocomplete="username" required>
+            <label for="admin-password">Contraseña</label>
+            <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+            <button class="submit-button" type="submit">Ingresar</button>
+        </form>
+    </dialog>{% endif %}
     {% block content %}{% endblock %}
     <footer class="site-footer"><p>© 2026 Juan Giuri all rights reserved</p></footer>
     <script>
@@ -42,6 +57,23 @@
             themeToggle.innerHTML = isLightMode ? '<i class="bi bi-moon-fill" aria-hidden="true"></i>' : '<i class="bi bi-sun-fill" aria-hidden="true"></i>';
             localStorage.setItem("portfolio-theme", isLightMode ? "light" : "dark");
         });
+        const adminModal = document.querySelector("#admin-modal");
+        const adminButton = document.querySelector(".admin-button");
+        const adminModalClose = document.querySelector(".admin-modal-close");
+        const adminUsername = document.querySelector("#admin-username");
+
+        if (adminButton) {
+            adminButton.addEventListener("click", () => {
+                adminModal.showModal();
+                adminUsername.focus();
+            });
+            adminModalClose.addEventListener("click", () => adminModal.close());
+            adminModal.addEventListener("click", (event) => {
+                if (event.target === adminModal) {
+                    adminModal.close();
+                }
+            });
+        }
     </script>
     {% block extra_js %}{% endblock %}
 </body>

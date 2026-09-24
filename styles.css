@@ -145,29 +145,107 @@ body {
     transition: background-color 180ms ease, color 180ms ease;
 }
 
-.blog-button {
+.blog-button,
+.admin-button {
     position: relative;
     z-index: 1;
     margin-left: clamp(12px, 2vw, 28px);
     padding: 13px 18px;
     border: 2px solid var(--gold);
+    border-radius: 0;
     background: rgba(40, 19, 20, 0.82);
     color: var(--gold);
+    font: inherit;
     font-size: 0.78rem;
     font-weight: 700;
     text-decoration: none;
     text-transform: uppercase;
+    line-height: normal;
     transition: background-color 180ms ease, color 180ms ease;
 }
 
+.admin-button {
+    appearance: none;
+    cursor: pointer;
+}
+
 .blog-button:hover,
-.blog-button:focus-visible {
+.blog-button:focus-visible,
+.admin-button:hover,
+.admin-button:focus-visible {
     background: var(--gold);
     color: var(--background);
 }
 
+.admin-modal {
+    width: min(90vw, 430px);
+    padding: 0;
+    border: 5px solid var(--gold);
+    background: var(--panel);
+    color: var(--cream);
+}
+
+.admin-modal::backdrop {
+    background: rgba(20, 8, 8, 0.78);
+}
+
+.admin-form {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    padding: 38px;
+}
+
+.admin-form h2 {
+    margin: 0 0 18px;
+    color: var(--gold);
+    font-size: 1.7rem;
+}
+
+.admin-form label {
+    color: var(--gold);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.admin-form input:not([type="hidden"]) {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--coral);
+    background: var(--background);
+    color: var(--cream);
+    font: inherit;
+}
+
+.admin-form input:not([type="hidden"]):focus {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+}
+
+.admin-form .submit-button {
+    justify-self: start;
+}
+
+.admin-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border: 0;
+    background: transparent;
+    color: var(--gold);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.admin-modal-close:hover,
+.admin-modal-close:focus-visible {
+    color: var(--cream);
+}
+
 body.light-mode .home-icon,
 body.light-mode .theme-toggle,
+body.light-mode .admin-button,
 body.light-mode .blog-button,
 body.light-mode .nav-links {
     background: rgba(237, 246, 248, 0.86);
@@ -566,10 +644,15 @@ body.page-ready .content-panel:nth-child(3) {
         font-size: 0.9rem;
     }
 
-    .blog-button {
+    .blog-button,
+    .admin-button {
         margin-left: 8px;
         padding: 10px 11px;
         font-size: 0.65rem;
+    }
+
+    .admin-form {
+        padding: 32px 24px;
     }
 
     .portfolio-layout {
