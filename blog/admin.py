@@ -14,9 +14,9 @@ class PostMediaInline(admin.TabularInline):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     inlines = (PostMediaInline,)
-    list_display = ("title", "published_at")
+    list_display = ("title", "author", "published_at")
     list_filter = ("published_at",)
-    search_fields = ("title", "body")
+    search_fields = ("title", "author", "body")
     prepopulated_fields = {"slug": ("title",)}
     ordering = ("-published_at",)
 

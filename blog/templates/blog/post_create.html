@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Publicar entrada | Blog{% endblock %}
+{% block content %}
+<main class="blog-page post-detail-page">
+    <a class="back-link" href="{% url 'blog:post_list' %}"><span aria-hidden="true">←</span> Volver al blog</a>
+    <section class="publish-panel" aria-labelledby="publish-title">
+        <p class="eyebrow">PANEL DE ADMINISTRACIÓN</p>
+        <h1 id="publish-title">Nueva entrada</h1>
+        <p class="blog-intro">Escribí tu entrada y adjuntá un archivo multimedia para publicarla en el blog.</p>
+        <form class="publish-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ post_form.non_field_errors }}
+            {% for field in post_form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            {% endfor %}
+            {% for field in media_form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {{ field.errors }}
+            {% endfor %}
+            <p class="muted-text">Formatos: imágenes, video, audio o PDF. Máximo 20 MB.</p>
+            <button type="submit" class="submit-button">Publicar entrada <span aria-hidden="true">→</span></button>
+        </form>
+    </section>
+</main>
+{% endblock %}

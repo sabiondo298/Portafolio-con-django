@@ -8,6 +8,7 @@ from .validators import validate_media_size
 
 class Post(models.Model):
     title = models.CharField("titulo", max_length=160)
+    author = models.CharField("nombre del autor", max_length=80, default="Juan Giuri")
     slug = models.SlugField("slug", max_length=180, unique=True, blank=True)
     excerpt = models.TextField("bajada", max_length=280)
     body = models.TextField("contenido")

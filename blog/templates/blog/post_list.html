@@ -13,7 +13,7 @@
                 {% else %}<div class="media-placeholder" aria-label="Esta entrada incluye contenido multimedia"><i class="bi bi-paperclip" aria-hidden="true"></i><span>{{ post.media_items|length }} archivo{{ post.media_items|length|pluralize:"s" }} adjunto{{ post.media_items|length|pluralize:"s" }}</span></div>{% endif %}
             {% endif %}
             {% endwith %}
-            <div class="post-card-body"><p class="post-date">{{ post.published_at|date:"d.m.Y" }}</p><h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2><p>{{ post.excerpt }}</p><a class="read-link" href="{{ post.get_absolute_url }}">Leer entrada <span aria-hidden="true">→</span></a></div>
+            <div class="post-card-body"><p class="post-date">{{ post.published_at|date:"d.m.Y" }}</p><h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2><p class="post-byline">Por {{ post.author }}</p><p>{{ post.excerpt }}</p><a class="read-link" href="{{ post.get_absolute_url }}">Leer entrada <span aria-hidden="true">→</span></a></div>
         </article>
         {% endfor %}
     </section>

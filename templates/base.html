@@ -20,7 +20,7 @@
             <a href="{% url 'portfolio:home' %}#Projects">Projects</a>
             <a href="{% url 'portfolio:home' %}#Contact">Contact</a>
         </nav>
-        {% if request.resolver_match.namespace == "blog" %}<button class="admin-button" type="button" aria-haspopup="dialog" aria-controls="admin-modal">Admin</button>{% endif %}
+        {% if request.resolver_match.namespace == "blog" %}{% if request.user.is_authenticated and request.user.is_superuser %}<a class="admin-button" href="{% url 'blog:post_create' %}">Publicar</a>{% else %}<button class="admin-button" type="button" aria-haspopup="dialog" aria-controls="admin-modal">Admin</button>{% endif %}{% endif %}
         <a class="blog-button" href="{% url 'blog:post_list' %}">Blog</a>
         <button class="theme-toggle" type="button" aria-label="Activar modo claro" aria-pressed="false" title="Cambiar tema"><i class="bi bi-sun-fill" aria-hidden="true"></i></button>
     </header>
@@ -30,7 +30,7 @@
             <button class="admin-modal-close" type="button" aria-label="Cerrar ventana">&times;</button>
             <p class="eyebrow">ACCESO PRIVADO</p>
             <h2 id="admin-modal-title">Ingresar al admin</h2>
-            <input type="hidden" name="next" value="{% url 'admin:index' %}">
+            <input type="hidden" name="next" value="{% url 'blog:post_create' %}">
             <label for="admin-username">Nombre de usuario</label>
             <input id="admin-username" name="username" type="text" autocomplete="username" required>
             <label for="admin-password">Contraseña</label>

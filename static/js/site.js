@@ -39,3 +39,19 @@ if (adminButton && adminModal && adminModalClose && adminUsername) {
         }
     });
 }
+
+document.querySelectorAll("[data-comment-trigger]").forEach((button) => {
+    const form = document.getElementById(button.getAttribute("aria-controls"));
+    if (!form) {
+        return;
+    }
+
+    button.addEventListener("click", () => {
+        const isOpen = button.getAttribute("aria-expanded") === "true";
+        button.setAttribute("aria-expanded", String(!isOpen));
+        form.hidden = isOpen;
+        if (!isOpen) {
+            form.querySelector("input[name='author']")?.focus();
+        }
+    });
+});

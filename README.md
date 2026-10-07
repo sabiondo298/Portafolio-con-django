@@ -17,7 +17,8 @@ media/blog/           Archivos multimedia que se cargan desde el admin
 
 ## Funcionalidad del blog
 
-- Las entradas se publican desde `/admin/` y se muestran de la más nueva a la más antigua.
+- El botón **Admin** permite iniciar sesión; al autenticarse, permite publicar entradas con nombre, texto y un archivo multimedia.
+- Las entradas también se pueden gestionar desde `/admin/` y se muestran de la más nueva a la más antigua.
 - Cada entrada incluye título, bajada, texto y al menos un archivo multimedia.
 - El admin admite imágenes, videos, audios y PDF de hasta 20 MB por archivo.
 - Las personas pueden comentar sin crear una cuenta; el administrador puede revisar y eliminar los comentarios desde el admin.

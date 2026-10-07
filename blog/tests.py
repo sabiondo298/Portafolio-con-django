@@ -63,6 +63,26 @@ class BlogViewsTests(TestCase):
         self.assertContains(response, "<video", html=False)
         self.assertContains(response, "<audio", html=False)
 
+    def test_comments_are_in_a_collapsible_section_and_form_opens_on_error(self):
+        post = self.create_post("Comentarios plegables")
+
+        response = self.client.get(post.get_absolute_url())
+
+        self.assertContains(response, "<details", html=False)
+        self.assertContains(response, "Comentarios")
+        self.assertContains(response, "Comentar")
+        self.assertContains(response, 'id="comment-form"', html=False)
+
+        invalid_response = self.client.post(
+            post.get_absolute_url(),
+            {"author": "", "body": ""},
+        )
+
+        self.assertEqual(invalid_response.status_code, 200)
+        self.assertContains(invalid_response, "<details", html=False)
+        self.assertContains(invalid_response, "Revisá los campos marcados")
+        self.assertContains(invalid_response, "Este campo es obligatorio")
+
     def test_post_list_is_paginated(self):
         for number in range(7):
             self.create_post(f"Entrada {number}")
@@ -140,6 +160,57 @@ class BlogAdminTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
 
+    def test_only_superuser_can_open_publication_form(self):
+        self.client.logout()
+
+        response = self.client.get(reverse("blog:post_create"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("admin:login"), response["Location"])
+
+    def test_admin_login_redirects_to_entry_form(self):
+        self.client.logout()
+
+        response = self.client.post(
+            reverse("admin:login"),
+            {
+                "username": "admin",
+                "password": "admin",
+                "next": reverse("blog:post_create"),
+            },
+        )
+
+        self.assertRedirects(response, reverse("blog:post_create"))
+        self.assertTrue(response.wsgi_request.user.is_superuser)
+
+    def test_superuser_can_publish_post_with_name_text_and_attachment(self):
+        response = self.client.post(
+            reverse("blog:post_create"),
+            {
+                "title": "Entrada desde el blog",
+                "author": "Admin del blog",
+                "body": "Esta es una entrada de prueba.",
+                "file": SimpleUploadedFile("photo.jpg", b"test-image"),
+                "caption": "Foto de prueba",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        post = Post.objects.get(title="Entrada desde el blog")
+        self.assertEqual(post.author, "Admin del blog")
+        self.assertEqual(post.body, "Esta es una entrada de prueba.")
+        self.assertEqual(post.media.count(), 1)
+        self.assertEqual(response["Location"], post.get_absolute_url())
+
+    def test_empty_publication_submission_shows_required_field_errors(self):
+        response = self.client.post(
+            reverse("blog:post_create"),
+            {"title": "", "author": "", "body": ""},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Este campo es obligatorio")
+
     def test_admin_can_publish_entry_with_required_media(self):
         add_url = reverse("admin:blog_post_add")
         response = self.client.get(add_url)
@@ -147,6 +218,7 @@ class BlogAdminTests(TestCase):
 
         post_data = {
             "title": "Entrada administrada",
+            "author": "Admin",
             "slug": "",
             "excerpt": "Resumen.",
             "body": "Texto completo.",
