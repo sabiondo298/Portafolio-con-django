@@ -9,6 +9,14 @@ class CommentForm(forms.ModelForm):
         fields = ["author", "body"]
         labels = {"author": "Tu nombre", "body": "Tu comentario"}
         widgets = {
-            "author": forms.TextInput(attrs={"placeholder": "Nombre", "autocomplete": "name"}),
-            "body": forms.Textarea(attrs={"placeholder": "Escribi una idea...", "rows": 5}),
+            "author": forms.TextInput(
+                attrs={"placeholder": "Nombre", "autocomplete": "name", "maxlength": 80}
+            ),
+            "body": forms.Textarea(
+                attrs={
+                    "placeholder": "Escribí una idea...",
+                    "rows": 5,
+                    "maxlength": 1000,
+                }
+            ),
         }

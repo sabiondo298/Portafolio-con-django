@@ -1,6 +1,9 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+
+from .validators import validate_media_size
 
 
 class Post(models.Model):
@@ -8,7 +11,6 @@ class Post(models.Model):
     slug = models.SlugField("slug", max_length=180, unique=True, blank=True)
     excerpt = models.TextField("bajada", max_length=280)
     body = models.TextField("contenido")
-    multimedia = models.FileField("archivo multimedia", upload_to="blog/", blank=True)
     published_at = models.DateTimeField("fecha de publicacion", auto_now_add=True)
 
     class Meta:
@@ -31,6 +33,52 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class PostMedia(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="media")
+    file = models.FileField(
+        "archivo",
+        upload_to="blog/",
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=[
+                    "jpg",
+                    "jpeg",
+                    "png",
+                    "gif",
+                    "webp",
+                    "mp4",
+                    "webm",
+                    "ogv",
+                    "mp3",
+                    "wav",
+                    "ogg",
+                    "pdf",
+                ]
+            ),
+            validate_media_size,
+        ],
+    )
+    caption = models.CharField("descripcion", max_length=180, blank=True)
+
+    class Meta:
+        verbose_name = "archivo multimedia"
+        verbose_name_plural = "archivos multimedia"
+
+    @property
+    def media_type(self):
+        extension = self.file.name.rsplit(".", 1)[-1].lower()
+        if extension in {"jpg", "jpeg", "png", "gif", "webp"}:
+            return "image"
+        if extension in {"mp4", "webm", "ogv"}:
+            return "video"
+        if extension in {"mp3", "wav", "ogg"}:
+            return "audio"
+        return "file"
+
+    def __str__(self):
+        return self.caption or self.file.name.rsplit("/", 1)[-1]
 
 
 class Comment(models.Model):

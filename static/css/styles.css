@@ -75,7 +75,7 @@ body {
     border-top: 5px solid var(--gold);
     border-bottom: 5px solid var(--gold);
     background-color: var(--nav-background);
-    background-image: linear-gradient(var(--nav-overlay), var(--nav-overlay)), url("assets/fotini.png");
+    background-image: linear-gradient(var(--nav-overlay), var(--nav-overlay)), url("../images/fotini.png");
     background-position: center;
     background-size: cover;
     overflow: hidden;
@@ -769,6 +769,8 @@ body.page-ready .content-panel:nth-child(3) {
 .post-card { border: 5px solid var(--gold); background: var(--panel); transition: transform 180ms ease, box-shadow 180ms ease; }
 .post-card:hover { transform: translateY(-5px); box-shadow: 8px 8px 0 var(--coral); }
 .post-media { display: block; width: 100%; height: 230px; object-fit: cover; border-bottom: 4px solid var(--gold); }
+.media-placeholder { display: flex; min-height: 230px; align-items: center; justify-content: center; gap: 12px; border-bottom: 4px solid var(--gold); color: var(--gold); font-weight: 600; }
+.media-placeholder i { font-size: 2rem; }
 .post-card-body { padding: 28px; }
 .post-card h2 { margin: 12px 0; font-size: clamp(1.35rem, 2.8vw, 2rem); line-height: 1.1; }
 .post-card h2 a, .read-link, .back-link { color: var(--gold); text-decoration: none; }
@@ -783,6 +785,10 @@ body.page-ready .content-panel:nth-child(3) {
 .back-link { display: inline-flex; gap: 10px; margin-bottom: 42px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
 .post-article { border-bottom: 4px solid var(--gold); padding-bottom: 54px; }
 .article-media { display: block; width: 100%; max-height: 560px; margin: 34px 0; object-fit: cover; border: 4px solid var(--gold); }
+.article-media-item { margin: 34px 0; }
+.article-media-item .article-media { margin: 0; }
+.article-media-item figcaption { margin-top: 10px; color: var(--coral); font-size: 0.85rem; }
+.article-audio { display: block; width: min(100%, 650px); margin: 34px 0; accent-color: var(--gold); }
 .media-file { display: inline-block; margin: 24px 0; color: var(--gold); font-weight: 700; }
 .post-body { margin-top: 32px; font-size: 1.05rem; }
 .comments-section { padding-top: 34px; }
@@ -801,6 +807,9 @@ body.page-ready .content-panel:nth-child(3) {
 .comment-form ul.errorlist { margin: 0; padding: 0; color: #ffad9e; list-style: none; }
 .submit-button { justify-self: start; margin-top: 14px; padding: 13px 18px; border: 2px solid var(--gold); background: var(--gold); color: var(--background); font: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 .submit-button:hover { background: transparent; color: var(--gold); }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 42px; color: var(--cream); font-size: 0.85rem; }
+.pagination a { color: var(--gold); font-weight: 700; text-decoration: none; }
+.pagination a:hover, .pagination a:focus-visible { color: var(--cream); }
 
 @media (max-width: 700px) {
     .blog-page { margin-top: 34px; }

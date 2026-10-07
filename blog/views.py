@@ -1,15 +1,21 @@
+from django.core.paginator import Paginator
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CommentForm
-from .models import Post
+from .models import Post, PostMedia
 
 
 def post_list(request):
-    return render(request, "blog/post_list.html", {"posts": Post.objects.all()})
+    posts = Post.objects.prefetch_related(
+        Prefetch("media", queryset=PostMedia.objects.order_by("pk"), to_attr="media_items")
+    )
+    page_obj = Paginator(posts, 6).get_page(request.GET.get("page"))
+    return render(request, "blog/post_list.html", {"page_obj": page_obj})
 
 
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post.objects.prefetch_related("media", "comments"), slug=slug)
     form = CommentForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         comment = form.save(commit=False)

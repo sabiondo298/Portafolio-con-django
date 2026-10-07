@@ -5,7 +5,19 @@
     <a class="back-link" href="{% url 'blog:post_list' %}"><span aria-hidden="true">←</span> Volver al blog</a>
     <article class="post-article">
         <p class="post-date">{{ post.published_at|date:"d.m.Y" }}</p><h1>{{ post.title }}</h1><p class="post-lead">{{ post.excerpt }}</p>
-        {% if post.multimedia %}{% if post.multimedia.name|lower|slice:"-4:" in ".jpg,.png,.gif,.webp" %}<img src="{{ post.multimedia.url }}" alt="Imagen de {{ post.title }}" class="article-media">{% else %}<a class="media-file" href="{{ post.multimedia.url }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-paperclip"></i> Abrir archivo multimedia</a>{% endif %}{% endif %}
+        {% if post.media.all %}
+        <div class="article-media-list" aria-label="Archivos multimedia de la entrada">
+            {% for item in post.media.all %}
+                <figure class="article-media-item">
+                    {% if item.media_type == "image" %}<img src="{{ item.file.url }}" alt="{{ item.caption|default:post.title }}" class="article-media">
+                    {% elif item.media_type == "video" %}<video class="article-media" controls preload="metadata"><source src="{{ item.file.url }}">Tu navegador no puede reproducir este video. <a href="{{ item.file.url }}">Descargar video</a></video>
+                    {% elif item.media_type == "audio" %}<audio class="article-audio" controls preload="metadata"><source src="{{ item.file.url }}">Tu navegador no puede reproducir este audio. <a href="{{ item.file.url }}">Descargar audio</a></audio>
+                    {% else %}<a class="media-file" href="{{ item.file.url }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-paperclip" aria-hidden="true"></i> Abrir archivo multimedia</a>{% endif %}
+                    {% if item.caption %}<figcaption>{{ item.caption }}</figcaption>{% endif %}
+                </figure>
+            {% endfor %}
+        </div>
+        {% endif %}
         <div class="post-body">{{ post.body|linebreaks }}</div>
     </article>
     <section id="comments" class="comments-section" aria-labelledby="comments-title">

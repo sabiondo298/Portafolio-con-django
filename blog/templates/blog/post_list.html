@@ -3,15 +3,27 @@
 {% block content %}
 <main class="blog-page">
     <div class="blog-heading"><p class="eyebrow">JUAN GIURI / BITÁCORA</p><h1>Ideas en proceso</h1><p class="blog-intro">Notas sobre lo que estoy aprendiendo, creando y descubriendo.</p></div>
-    {% if posts %}
+    {% if page_obj.object_list %}
     <section class="post-grid" aria-label="Entradas del blog">
-        {% for post in posts %}
+        {% for post in page_obj %}
         <article class="post-card">
-            {% if post.multimedia %}{% if post.multimedia.name|lower|slice:"-4:" in ".jpg,.png,.gif,.webp" %}<img src="{{ post.multimedia.url }}" alt="Imagen de {{ post.title }}" class="post-media">{% endif %}{% endif %}
+            {% with preview=post.media_items.0 %}
+            {% if preview %}
+                {% if preview.media_type == "image" %}<img src="{{ preview.file.url }}" alt="{{ preview.caption|default:post.title }}" class="post-media">
+                {% else %}<div class="media-placeholder" aria-label="Esta entrada incluye contenido multimedia"><i class="bi bi-paperclip" aria-hidden="true"></i><span>{{ post.media_items|length }} archivo{{ post.media_items|length|pluralize:"s" }} adjunto{{ post.media_items|length|pluralize:"s" }}</span></div>{% endif %}
+            {% endif %}
+            {% endwith %}
             <div class="post-card-body"><p class="post-date">{{ post.published_at|date:"d.m.Y" }}</p><h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2><p>{{ post.excerpt }}</p><a class="read-link" href="{{ post.get_absolute_url }}">Leer entrada <span aria-hidden="true">→</span></a></div>
         </article>
         {% endfor %}
     </section>
+    {% if page_obj.has_other_pages %}
+    <nav class="pagination" aria-label="Paginación del blog">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" aria-label="Página anterior">← Anterior</a>{% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" aria-label="Página siguiente">Siguiente →</a>{% endif %}
+    </nav>
+    {% endif %}
     {% else %}
     <div class="empty-state"><i class="bi bi-journal-code" aria-hidden="true"></i><h2>La primera entrada está por llegar.</h2><p>El administrador puede publicar una nueva historia desde el panel de Django.</p></div>
     {% endif %}
