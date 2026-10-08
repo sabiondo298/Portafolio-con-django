@@ -1,3 +1,4 @@
+# crea la primera versión de los modelos del blog.
 from django.db import migrations, models
 import django.db.models.deletion
 

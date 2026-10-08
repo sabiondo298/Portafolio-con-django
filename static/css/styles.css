@@ -791,6 +791,27 @@ body.page-ready .content-panel:nth-child(3) {
 .article-media-item figcaption { margin-top: 10px; color: var(--coral); font-size: 0.85rem; }
 .article-audio { display: block; width: min(100%, 650px); margin: 34px 0; accent-color: var(--gold); }
 .media-file { display: inline-block; margin: 24px 0; color: var(--gold); font-weight: 700; }
+.post-header-row,
+.comment-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.post-header-row > div,
+.comment-header-row > div {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.inline-delete-form {
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 .post-body { margin-top: 32px; font-size: 1.05rem; }
 .comments-section { margin-top: 28px; border: 3px solid var(--gold); background: var(--panel); }
 .comments-toggle { padding: 18px 22px; color: var(--gold); font-size: 1.15rem; font-weight: 700; cursor: pointer; list-style: none; }
@@ -815,8 +836,30 @@ body.page-ready .content-panel:nth-child(3) {
 .publish-panel h1 { margin: 10px 0 14px; color: var(--gold); font-size: clamp(2rem, 5vw, 4rem); }
 .publish-form { max-width: none; }
 .publish-form .muted-text { margin-bottom: 0; font-size: 0.8rem; }
-.submit-button { justify-self: start; margin-top: 14px; padding: 13px 18px; border: 2px solid var(--gold); background: var(--gold); color: var(--background); font: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
-.submit-button:hover { background: transparent; color: var(--gold); }
+.submit-button,
+.delete-button {
+    justify-self: start;
+    margin-top: 14px;
+    padding: 13px 18px;
+    border: 2px solid var(--gold);
+    background: var(--gold);
+    color: var(--background);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.submit-button:hover,
+.delete-button:hover {
+    background: transparent;
+    color: var(--gold);
+}
+
+.delete-button {
+    margin-top: 0;
+}
 .pagination { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 42px; color: var(--cream); font-size: 0.85rem; }
 .pagination a { color: var(--gold); font-weight: 700; text-decoration: none; }
 .pagination a:hover, .pagination a:focus-visible { color: var(--cream); }

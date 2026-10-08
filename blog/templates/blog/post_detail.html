@@ -4,8 +4,19 @@
 <main class="blog-page post-detail-page">
     <a class="back-link" href="{% url 'blog:post_list' %}"><span aria-hidden="true">←</span> Volver al blog</a>
     <article class="post-article">
-        <p class="post-date">{{ post.published_at|date:"d.m.Y" }}</p><h1>{{ post.title }}</h1>
-        <p class="post-byline">Por {{ post.author }}</p>
+        <div class="post-header-row">
+            <div>
+                <p class="post-date">{{ post.published_at|date:"d.m.Y" }}</p>
+                <h1>{{ post.title }}</h1>
+                <p class="post-byline">Por {{ post.author }}</p>
+            </div>
+            {% if user.is_staff and perms.blog.delete_post %}
+            <form method="post" action="{% url 'blog:post_delete' post.slug %}" class="inline-delete-form">
+                {% csrf_token %}
+                <button type="submit" class="delete-button" name="delete_post" value="Eliminar" onclick="return confirm('¿Seguro que querés eliminar esta entrada y todos sus comentarios?');">Eliminar</button>
+            </form>
+            {% endif %}
+        </div>
         <p class="post-lead">{{ post.excerpt }}</p>
         {% if post.media.all %}
         <div class="article-media-list" aria-label="Archivos multimedia de la entrada">
@@ -25,7 +36,23 @@
     <details id="comments" class="comments-section" {% if form.errors %}open{% endif %}>
         <summary class="comments-toggle">Comentarios <span>({{ post.comments.count }})</span></summary>
         <div class="comments-content">
-            {% for comment in post.comments.all %}<article class="comment"><div><strong>{{ comment.author }}</strong><time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|date:"d/m/Y H:i" }}</time></div><p>{{ comment.body|linebreaksbr }}</p></article>{% empty %}<p class="muted-text">Todavía no hay comentarios. Sé el primero en dejar una idea.</p>{% endfor %}
+            {% for comment in post.comments.all %}
+                <article class="comment">
+                    <div class="comment-header-row">
+                        <div>
+                            <strong>{{ comment.author }}</strong>
+                            <time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|date:"d/m/Y H:i" }}</time>
+                        </div>
+                        {% if user.is_staff and perms.blog.delete_comment %}
+                        <form method="post" action="{% url 'blog:comment_delete' post.slug comment.pk %}" class="inline-delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button" name="delete_comment" value="{{ comment.pk }}" onclick="return confirm('¿Seguro que querés eliminar este comentario?');">Eliminar</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <p>{{ comment.body|linebreaksbr }}</p>
+                </article>
+            {% empty %}<p class="muted-text">Todavía no hay comentarios. Sé el primero en dejar una idea.</p>{% endfor %}
             <button class="submit-button comment-open-button" type="button" data-comment-trigger aria-controls="comment-form" aria-expanded="{% if form.errors %}true{% else %}false{% endif %}">Comentar</button>
             <form id="comment-form" class="comment-form" method="post" action="{{ post.get_absolute_url }}#comments" {% if not form.errors %}hidden{% endif %}>
                 {% csrf_token %}

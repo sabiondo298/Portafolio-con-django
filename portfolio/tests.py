@@ -1,8 +1,10 @@
+# prueba la vista principal y la presencia de archivos estáticos.
 from django.contrib.staticfiles.finders import find
 from django.test import TestCase
 from django.urls import reverse
 
 
+# comprueba que la home y los assets del portfolio responden bien.
 class PortfolioViewTests(TestCase):
     def test_homepage_is_served_by_the_portfolio_app(self):
         response = self.client.get(reverse("portfolio:home"))

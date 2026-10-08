@@ -1,5 +1,7 @@
+# configura el proyecto principal, los apps y los archivos estáticos.
 from pathlib import Path
 
+# apunta al directorio raíz del proyecto para localizar archivos y templates.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-change-this-before-deploying"

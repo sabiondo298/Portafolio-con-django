@@ -1,3 +1,4 @@
+# agrega el campo de autor a las entradas del blog.
 from django.db import migrations, models
 
 

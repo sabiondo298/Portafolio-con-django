@@ -1,3 +1,4 @@
+# valida la cantidad máxima permitida para cada archivo multimedia.
 from django.core.exceptions import ValidationError
 
 

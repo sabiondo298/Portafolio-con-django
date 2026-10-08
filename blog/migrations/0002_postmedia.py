@@ -1,3 +1,4 @@
+# migra los archivos multimedia antiguos a la nueva tabla del blog.
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion

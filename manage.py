@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+# inicia django y ejecuta la línea de comandos del proyecto.
 import os
 import sys
 
 
+# lanza la aplicación con la configuración del proyecto principal.
 def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "portfolio_site.settings")
     try:

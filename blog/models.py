@@ -1,3 +1,4 @@
+# define los modelos del blog para entradas, media y comentarios.
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.urls import reverse
@@ -6,6 +7,7 @@ from django.utils.text import slugify
 from .validators import validate_media_size
 
 
+# guarda las entradas publicadas y crea slugs únicos automáticamente.
 class Post(models.Model):
     title = models.CharField("titulo", max_length=160)
     author = models.CharField("nombre del autor", max_length=80, default="Juan Giuri")
@@ -19,6 +21,7 @@ class Post(models.Model):
         verbose_name = "entrada"
         verbose_name_plural = "entradas"
 
+    # genera un slug único cuando la entrada todavía no tiene uno.
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(self.title)
@@ -29,6 +32,7 @@ class Post(models.Model):
                 suffix += 1
         super().save(*args, **kwargs)
 
+    # devuelve la ruta pública de la entrada para usarla en enlaces.
     def get_absolute_url(self):
         return reverse("blog:post_detail", kwargs={"slug": self.slug})
 
@@ -36,6 +40,7 @@ class Post(models.Model):
         return self.title
 
 
+# guarda cada archivo multimedia asociado a una entrada del blog.
 class PostMedia(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="media")
     file = models.FileField(
@@ -67,6 +72,7 @@ class PostMedia(models.Model):
         verbose_name = "archivo multimedia"
         verbose_name_plural = "archivos multimedia"
 
+    # informa si el archivo es imagen, video, audio o documento.
     @property
     def media_type(self):
         extension = self.file.name.rsplit(".", 1)[-1].lower()
@@ -82,6 +88,7 @@ class PostMedia(models.Model):
         return self.caption or self.file.name.rsplit("/", 1)[-1]
 
 
+# guarda cada comentario hecho por un visitante en una entrada.
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     author = models.CharField("nombre", max_length=80)

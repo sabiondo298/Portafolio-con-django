@@ -1,3 +1,4 @@
+# prueba el comportamiento del blog y sus permisos de administración.
 import tempfile
 
 from django.contrib.auth import get_user_model
@@ -10,6 +11,7 @@ from .models import Comment, Post, PostMedia
 from .validators import MAX_MEDIA_SIZE, validate_media_size
 
 
+# valida la lista, detalle y permisos de eliminación del blog.
 class BlogViewsTests(TestCase):
     def create_post(self, title, published_at=None):
         post = Post.objects.create(
@@ -94,7 +96,51 @@ class BlogViewsTests(TestCase):
         self.assertEqual(len(first_page.context["page_obj"].object_list), 6)
         self.assertEqual(len(second_page.context["page_obj"].object_list), 1)
 
+    def test_admin_can_delete_post_with_comments_from_detail_view(self):
+        admin = get_user_model().objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="admin",
+        )
+        post = self.create_post("Entrada a borrar")
+        Comment.objects.create(post=post, author="Visitante", body="comentario 1")
+        Comment.objects.create(post=post, author="Visitante", body="comentario 2")
 
+        self.client.force_login(admin)
+
+        response = self.client.get(post.get_absolute_url())
+        self.assertContains(response, "Eliminar")
+        self.assertContains(response, "value=\"Eliminar\"", html=False)
+
+        delete_response = self.client.post(reverse("blog:post_delete", args=[post.slug]))
+
+        self.assertRedirects(delete_response, reverse("blog:post_list"))
+        self.assertFalse(Post.objects.filter(pk=post.pk).exists())
+        self.assertFalse(Comment.objects.filter(post_id=post.pk).exists())
+
+    def test_admin_can_delete_comment_from_detail_view(self):
+        admin = get_user_model().objects.create_superuser(
+            username="admin2",
+            email="admin2@example.com",
+            password="admin",
+        )
+        post = self.create_post("Entrada con comentario")
+        comment = Comment.objects.create(post=post, author="Visitante", body="comentario")
+
+        self.client.force_login(admin)
+
+        response = self.client.get(post.get_absolute_url())
+        self.assertContains(response, 'name="delete_comment"')
+
+        delete_response = self.client.post(
+            reverse("blog:comment_delete", args=[post.slug, comment.pk])
+        )
+
+        self.assertRedirects(delete_response, f"{post.get_absolute_url()}#comments")
+        self.assertFalse(Comment.objects.filter(pk=comment.pk).exists())
+
+
+# comprueba que la validación de archivos multimedia funcione correctamente.
 class PostMediaValidationTests(TestCase):
     def test_media_kind_is_detected_for_images_video_audio_and_documents(self):
         post = Post.objects.create(
@@ -139,6 +185,7 @@ class PostMediaValidationTests(TestCase):
             validate_media_size(oversized_file)
 
 
+# prueba la lógica del administrador para publicar y borrar entradas.
 class BlogAdminTests(TestCase):
     def setUp(self):
         self.media_directory = tempfile.TemporaryDirectory()
@@ -159,6 +206,36 @@ class BlogAdminTests(TestCase):
         response = self.client.get(reverse("admin:blog_post_add"))
 
         self.assertEqual(response.status_code, 302)
+
+    def test_users_without_delete_permission_cannot_delete_posts_or_comments(self):
+        non_admin = get_user_model().objects.create_user(
+            username="editor",
+            email="editor@example.com",
+            password="admin",
+            is_staff=True,
+        )
+        post = Post.objects.create(
+            title="Entrada protegida",
+            excerpt="Bajada",
+            body="Contenido",
+        )
+        comment = Comment.objects.create(
+            post=post,
+            author="Visitante",
+            body="Comentario de prueba",
+        )
+
+        self.client.force_login(non_admin)
+
+        delete_post_response = self.client.get(
+            reverse("admin:blog_post_delete", args=[post.pk])
+        )
+        delete_comment_response = self.client.get(
+            reverse("admin:blog_comment_delete", args=[comment.pk])
+        )
+
+        self.assertEqual(delete_post_response.status_code, 403)
+        self.assertEqual(delete_comment_response.status_code, 403)
 
     def test_only_superuser_can_open_publication_form(self):
         self.client.logout()

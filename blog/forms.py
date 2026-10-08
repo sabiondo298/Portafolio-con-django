@@ -1,8 +1,10 @@
+# define los formularios del blog para publicar entradas, media y comentarios.
 from django import forms
 
 from .models import Comment, Post, PostMedia
 
 
+# crea el formulario para publicar una nueva entrada del blog.
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -22,6 +24,7 @@ class PostForm(forms.ModelForm):
             ),
         }
 
+    # genera el resumen de la entrada y recorta el texto si supera el límite.
     def save(self, commit=True):
         post = super().save(commit=False)
         excerpt = " ".join(post.body.split())
@@ -32,6 +35,7 @@ class PostForm(forms.ModelForm):
         return post
 
 
+# crea el formulario para adjuntar archivos multimedia a la entrada.
 class PostMediaForm(forms.ModelForm):
     class Meta:
         model = PostMedia
@@ -43,6 +47,7 @@ class PostMediaForm(forms.ModelForm):
         }
 
 
+# crea el formulario para publicar comentarios en una entrada.
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
