@@ -12,15 +12,15 @@ class PostForm(forms.ModelForm):
         labels = {
             "title": "Título",
             "author": "Tu nombre",
-            "body": "Texto de la entrada",
+            "body": "Texto de la post",
         }
         widgets = {
-            "title": forms.TextInput(attrs={"placeholder": "Título de la entrada"}),
+            "title": forms.TextInput(attrs={"placeholder": "Título de la post"}),
             "author": forms.TextInput(
                 attrs={"placeholder": "Nombre del autor", "autocomplete": "name"}
             ),
             "body": forms.Textarea(
-                attrs={"placeholder": "Escribí tu entrada...", "rows": 10}
+                attrs={"placeholder": "Escribí tu post...", "rows": 10}
             ),
         }
 
