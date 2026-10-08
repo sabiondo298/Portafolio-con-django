@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # inicia django y ejecuta la línea de comandos del proyecto.
 import os
 import sys
