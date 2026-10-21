@@ -1,12 +1,18 @@
 # configura el proyecto principal, los apps y los archivos estáticos.
+import os
 from pathlib import Path
 
 # apunta al directorio raíz del proyecto para localizar archivos y templates.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Ruta donde se recolectarán los archivos para producción 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
+# URL pública para acceder a estos archivos en el navegador 
+STATIC_URL = '/static/'
+
 SECRET_KEY = "django-insecure-change-this-before-deploying"
 DEBUG = True
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver", "sabiondo298.pythonanywhere.com"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
